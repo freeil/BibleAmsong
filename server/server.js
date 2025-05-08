@@ -1,36 +1,40 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+
 const app = express();
-const PORT = process.env.PORT || 10000;
+const port = process.env.PORT || 10000;
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
-const STATIC_DIR = path.join(__dirname, '..', 'static');
+app.use(express.static('static'));
 
-app.use('/data', express.static(DATA_DIR));
-app.use('/', express.static(STATIC_DIR));
+// data 디렉토리 내의 모든 하위 디렉토리 목록을 반환
+app.get('/dirs', (req, res) => {
+  const dataDir = path.join(__dirname, 'data');
+  fs.readdir(dataDir, { withFileTypes: true }, (err, files) => {
+    if (err) {
+      return res.status(500).send('디렉토리 읽기 실패');
+    }
 
-// 디렉토리 목록
-app.get('/api/dirs', (req, res) => {
-  fs.readdir(DATA_DIR, { withFileTypes: true }, (err, entries) => {
-    if (err) return res.status(500).send("Error reading directory");
-    const dirs = entries.filter(e => e.isDirectory()).map(d => d.name);
+    const dirs = files.filter(file => file.isDirectory()).map(file => file.name);
     res.json(dirs);
   });
 });
 
-// 파일 목록
-app.get('/api/files', (req, res) => {
-  const subdir = req.query.dir;
-  const fullPath = path.join(DATA_DIR, subdir || '');
-  if (!fullPath.startsWith(DATA_DIR)) return res.status(400).send("Invalid path");
+// 파일 목록을 반환하는 엔드포인트
+app.get('/data/:dir', (req, res) => {
+  const dir = req.params.dir;
+  const dirPath = path.join(__dirname, 'data', dir);
 
-  fs.readdir(fullPath, (err, files) => {
-    if (err) return res.status(500).send("Error reading files");
+  fs.readdir(dirPath, (err, files) => {
+    if (err) {
+      return res.status(500).send('파일 목록 읽기 실패');
+    }
+
     res.json(files);
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// 서버 시작
+app.listen(port, () => {
+  console.log(`서버가 http://localhost:${port}에서 실행 중입니다.`);
 });

@@ -1,8 +1,9 @@
-const dirs = ['d1', 'd2']; // 디렉토리 리스트
-
 async function loadDirs() {
   const dirSelect = document.getElementById('dirSelect');
   dirSelect.innerHTML = ''; // 기존 항목 삭제
+
+  // /dirs 엔드포인트에서 디렉토리 목록을 불러옵니다.
+  const dirs = await fetch('/dirs').then(res => res.json());
 
   dirs.forEach(dir => {
     const option = document.createElement('option');
@@ -21,7 +22,7 @@ async function loadFiles() {
 
   if (dir) {
     const files = await fetch(`/data/${dir}`).then(res => res.json());
-    
+
     files.forEach(file => {
       const option = document.createElement('option');
       option.value = file;
