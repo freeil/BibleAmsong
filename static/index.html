@@ -2,20 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BibleAmson File Viewer</title>
+  <title>BibleAmson Viewer</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>BibleAmson File Viewer</h1>
 
-  <label for="dirSelect">디렉토리 선택:</label>
-  <select id="dirSelect" onchange="loadFiles()"></select>
+  <div id="controls">
+    <label for="dirSelect">📁 디렉토리:</label>
+    <select id="dirSelect"></select>
 
-  <label for="fileSelect">파일 선택:</label>
-  <select id="fileSelect" onchange="showFile()"></select>
+    <label for="fileSelect">📄 파일:</label>
+    <select id="fileSelect"></select>
+  </div>
 
-  <div id="viewer"></div>
+  <div id="viewer">파일을 선택하세요</div>
 
   <script src="script.js"></script>
 </body>
