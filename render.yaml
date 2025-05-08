@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: bibleamson
+    env: node
+    plan: free
+    buildCommand: yarn install
+    startCommand: node server/server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 18
