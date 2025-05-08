@@ -1,45 +1,36 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const cors = require('cors');
-
 const app = express();
-const port = process.env.PORT || 10000;
+const PORT = process.env.PORT || 10000;
 
-app.use(cors());  // CORS 설정 추가
-app.use(express.static('static'));  // static 폴더 내의 정적 파일 제공
+const DATA_DIR = path.join(__dirname, '..', 'data');
+const STATIC_DIR = path.join(__dirname, '..', 'static');
 
-// /dirs 엔드포인트에서 data 폴더의 모든 하위 디렉토리 목록을 반환
-app.get('/dirs', (req, res) => {
-  const dataDir = path.join(__dirname, 'data');  // 'data' 폴더의 경로
+app.use('/data', express.static(DATA_DIR));
+app.use('/', express.static(STATIC_DIR));
 
-  fs.readdir(dataDir, { withFileTypes: true }, (err, files) => {
-    if (err) {
-      return res.status(500).send('디렉토리 읽기 실패');
-    }
-
-    // 디렉토리만 필터링하여 배열로 반환
-    const dirs = files.filter(file => file.isDirectory()).map(file => file.name);
-    console.log('디렉토리 목록:', dirs);  // 서버 로그에 디렉토리 목록 출력
-    res.json(dirs);  // 클라이언트에 디렉토리 목록 반환
+// 디렉토리 목록
+app.get('/api/dirs', (req, res) => {
+  fs.readdir(DATA_DIR, { withFileTypes: true }, (err, entries) => {
+    if (err) return res.status(500).send("Error reading directory");
+    const dirs = entries.filter(e => e.isDirectory()).map(d => d.name);
+    res.json(dirs);
   });
 });
 
-// /data/:dir 엔드포인트에서 선택된 디렉토리 내의 파일 목록 반환
-app.get('/data/:dir', (req, res) => {
-  const dir = req.params.dir;  // 클라이언트에서 선택한 디렉토리
-  const dirPath = path.join(__dirname, 'data', dir);  // 해당 디렉토리의 경로
+// 파일 목록
+app.get('/api/files', (req, res) => {
+  const subdir = req.query.dir;
+  const fullPath = path.join(DATA_DIR, subdir || '');
+  if (!fullPath.startsWith(DATA_DIR)) return res.status(400).send("Invalid path");
 
-  fs.readdir(dirPath, (err, files) => {
-    if (err) {
-      return res.status(500).send('파일 목록 읽기 실패');
-    }
-
-    res.json(files);  // 클라이언트에 파일 목록 반환
+  fs.readdir(fullPath, (err, files) => {
+    if (err) return res.status(500).send("Error reading files");
+    res.json(files);
   });
 });
 
-// 서버 시작
-app.listen(port, () => {
-  console.log(`서버가 http://localhost:${port}에서 실행 중입니다.`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
