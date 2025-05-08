@@ -1,10 +1,8 @@
 services:
   - type: web
-    name: bibleamson
+    name: BibleAmson
     env: node
+    buildCommand: 'yarn install' # 혹은 'npm install'
+    startCommand: 'node server/server.js'
     plan: free
-    buildCommand: yarn install
-    startCommand: node server/server.js
-    envVars:
-      - key: NODE_VERSION
-        value: 18
+    branches: [ main ]

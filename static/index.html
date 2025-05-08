@@ -1,16 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BibleAmson Viewer</title>
+  <link rel="stylesheet" href="style.css"> <!-- 스타일 시트 추가 -->
 </head>
 <body>
-  <h2>BibleAmson 파일 보기</h2>
-  <select id="dirSelect" onchange="loadFiles()"></select>
-  <select id="fileSelect"></select>
-  <button onclick="showFile()">보기</button>
-  <div id="viewer" style="margin-top: 20px;"></div>
+  <div class="container">
+    <header>
+      <h1>BibleAmson 파일 뷰어</h1>
+    </header>
+    
+    <main>
+      <div class="selection-container">
+        <label for="dirSelect">디렉토리 선택:</label>
+        <select id="dirSelect" onchange="loadFiles()"></select>
 
+        <label for="fileSelect">파일 선택:</label>
+        <select id="fileSelect"></select>
+        <button onclick="showFile()">보기</button>
+      </div>
+
+      <div id="viewer" class="file-viewer"></div>
+    </main>
+  </div>
+  
   <script src="script.js"></script>
   <script>loadDirs();</script>
 </body>

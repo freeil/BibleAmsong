@@ -1,0 +1,103 @@
+/* 전체적인 레이아웃 */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #333;
+}
+
+/* 컨테이너 스타일 */
+.container {
+  width: 80%;
+  max-width: 1200px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+/* 헤더 */
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-size: 2em;
+  color: #007bff;
+  margin: 0;
+}
+
+/* 선택 항목 컨테이너 */
+.selection-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+label {
+  font-weight: bold;
+}
+
+select, button {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* 파일 내용 표시 영역 */
+.file-viewer {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* 텍스트 파일 스타일 */
+.file-viewer pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 1.2em;
+  line-height: 1.6em;
+  color: #333;
+  background-color: #f7f7f7;
+  border-radius: 4px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* PDF 뷰어 스타일 */
+.file-viewer iframe {
+  width: 100%;
+  height: 600px;
+  border: none;
+}
+
+/* 이미지 스타일 */
+.file-viewer img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}

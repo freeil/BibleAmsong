@@ -1,23 +1,34 @@
+const dirs = ['d1', 'd2']; // 디렉토리 리스트
+
 async function loadDirs() {
-  const res = await fetch('/api/dirs');
-  const dirs = await res.json();
-
   const dirSelect = document.getElementById('dirSelect');
-  dirSelect.innerHTML = dirs.map(dir => `<option value="${dir}">${dir}</option>`).join('');
+  dirSelect.innerHTML = ''; // 기존 항목 삭제
 
-  if (dirs.length > 0) {
-    dirSelect.value = dirs[0];
-    loadFiles();
-  }
+  dirs.forEach(dir => {
+    const option = document.createElement('option');
+    option.value = dir;
+    option.textContent = dir;
+    dirSelect.appendChild(option);
+  });
+
+  loadFiles(); // 디렉토리 선택 시 파일을 로드
 }
 
 async function loadFiles() {
   const dir = document.getElementById('dirSelect').value;
-  const res = await fetch(`/api/files?dir=${dir}`);
-  const files = await res.json();
-
   const fileSelect = document.getElementById('fileSelect');
-  fileSelect.innerHTML = files.map(file => `<option value="${dir}/${file}">${file}</option>`).join('');
+  fileSelect.innerHTML = ''; // 기존 파일 목록 삭제
+
+  if (dir) {
+    const files = await fetch(`/data/${dir}`).then(res => res.json());
+    
+    files.forEach(file => {
+      const option = document.createElement('option');
+      option.value = file;
+      option.textContent = file;
+      fileSelect.appendChild(option);
+    });
+  }
 }
 
 async function showFile() {
@@ -25,13 +36,16 @@ async function showFile() {
   const ext = path.split('.').pop();
   const base = '/data/';
 
+  const viewer = document.getElementById('viewer');
+  viewer.innerHTML = ""; // 기존 내용 초기화
+
   if (ext === 'txt') {
     const res = await fetch(base + path);
     const text = await res.text();
-    document.getElementById('viewer').innerHTML = `<pre>${text}</pre>`;
+    viewer.innerHTML = `<pre>${text}</pre>`;
   } else if (ext === 'pdf') {
-    document.getElementById('viewer').innerHTML = `<iframe src="${base + path}" width="100%" height="600"></iframe>`;
+    viewer.innerHTML = `<iframe src="${base + path}" width="100%" height="600"></iframe>`;
   } else {
-    document.getElementById('viewer').innerHTML = `<img src="${base + path}" width="400" />`;
+    viewer.innerHTML = `<img src="${base + path}" />`;
   }
 }
